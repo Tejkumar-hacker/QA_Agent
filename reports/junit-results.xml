@@ -1,0 +1,151 @@
+<testsuites id="" name="" tests="3" failures="0" skipped="0" errors="3" time="7.062174">
+<testsuite name="ui\playwright\fund-transfer.spec.ts" timestamp="2026-10-05T09:23:36.499Z" hostname="ui-chromium" tests="3" failures="0" skipped="0" time="4.726" errors="3">
+<testcase name="CoreBank UI Fund Transfer - Playwright Automation Suite › TC-FT-001: [Happy Path] Complete Fund Transfer with Valid Balance @ui @smoke @critical" classname="ui\playwright\fund-transfer.spec.ts" time="4.022">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\artifacts\test-results\ui-playwright-fund-transfe-a47e2-d-Balance-ui-smoke-critical-ui-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|..\artifacts\test-results\ui-playwright-fund-transfe-a47e2-d-Balance-ui-smoke-critical-ui-chromium\video.webm]]
+
+[[ATTACHMENT|..\artifacts\test-results\ui-playwright-fund-transfe-a47e2-d-Balance-ui-smoke-critical-ui-chromium\error-context.md]]
+
+[[ATTACHMENT|..\artifacts\test-results\ui-playwright-fund-transfe-a47e2-d-Balance-ui-smoke-critical-ui-chromium\trace.zip]]
+]]>
+</system-out>
+<error message="page.goto: net::ERR_NAME_NOT_RESOLVED at https://qa-banking.bankdomain.internal/" type="Error">
+<![CDATA[  [ui-chromium] › ui\playwright\fund-transfer.spec.ts:45:7 › CoreBank UI Fund Transfer - Playwright Automation Suite › TC-FT-001: [Happy Path] Complete Fund Transfer with Valid Balance @ui @smoke @critical 
+
+    Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://qa-banking.bankdomain.internal/
+    Call log:
+      - navigating to "https://qa-banking.bankdomain.internal/", waiting until "load"
+
+
+      40 |     });
+      41 |
+    > 42 |     await page.goto('/');
+         |                ^
+      43 |   });
+      44 |
+      45 |   test('TC-FT-001: [Happy Path] Complete Fund Transfer with Valid Balance @ui @smoke @critical', async ({ page }) => {
+        at C:\Users\TejKumarJajula\Desktop\whitePaperAgent\tests\ui\playwright\fund-transfer.spec.ts:42:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\artifacts\test-results\ui-playwright-fund-transfe-a47e2-d-Balance-ui-smoke-critical-ui-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\artifacts\test-results\ui-playwright-fund-transfe-a47e2-d-Balance-ui-smoke-critical-ui-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\artifacts\test-results\ui-playwright-fund-transfe-a47e2-d-Balance-ui-smoke-critical-ui-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\artifacts\test-results\ui-playwright-fund-transfe-a47e2-d-Balance-ui-smoke-critical-ui-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\artifacts\test-results\ui-playwright-fund-transfe-a47e2-d-Balance-ui-smoke-critical-ui-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</error>
+</testcase>
+<testcase name="CoreBank UI Fund Transfer - Playwright Automation Suite › TC-FT-002: [Negative] Transfer Exceeding Available Balance Displays Inline Error @ui @critical" classname="ui\playwright\fund-transfer.spec.ts" time="0.35">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\artifacts\test-results\ui-playwright-fund-transfe-22ab8-ys-Inline-Error-ui-critical-ui-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|..\artifacts\test-results\ui-playwright-fund-transfe-22ab8-ys-Inline-Error-ui-critical-ui-chromium\video.webm]]
+
+[[ATTACHMENT|..\artifacts\test-results\ui-playwright-fund-transfe-22ab8-ys-Inline-Error-ui-critical-ui-chromium\error-context.md]]
+
+[[ATTACHMENT|..\artifacts\test-results\ui-playwright-fund-transfe-22ab8-ys-Inline-Error-ui-critical-ui-chromium\trace.zip]]
+]]>
+</system-out>
+<error message="page.goto: net::ERR_NAME_NOT_RESOLVED at https://qa-banking.bankdomain.internal/" type="Error">
+<![CDATA[  [ui-chromium] › ui\playwright\fund-transfer.spec.ts:57:7 › CoreBank UI Fund Transfer - Playwright Automation Suite › TC-FT-002: [Negative] Transfer Exceeding Available Balance Displays Inline Error @ui @critical 
+
+    Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://qa-banking.bankdomain.internal/
+    Call log:
+      - navigating to "https://qa-banking.bankdomain.internal/", waiting until "load"
+
+
+      40 |     });
+      41 |
+    > 42 |     await page.goto('/');
+         |                ^
+      43 |   });
+      44 |
+      45 |   test('TC-FT-001: [Happy Path] Complete Fund Transfer with Valid Balance @ui @smoke @critical', async ({ page }) => {
+        at C:\Users\TejKumarJajula\Desktop\whitePaperAgent\tests\ui\playwright\fund-transfer.spec.ts:42:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\artifacts\test-results\ui-playwright-fund-transfe-22ab8-ys-Inline-Error-ui-critical-ui-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\artifacts\test-results\ui-playwright-fund-transfe-22ab8-ys-Inline-Error-ui-critical-ui-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\artifacts\test-results\ui-playwright-fund-transfe-22ab8-ys-Inline-Error-ui-critical-ui-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\artifacts\test-results\ui-playwright-fund-transfe-22ab8-ys-Inline-Error-ui-critical-ui-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\artifacts\test-results\ui-playwright-fund-transfe-22ab8-ys-Inline-Error-ui-critical-ui-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</error>
+</testcase>
+<testcase name="CoreBank UI Fund Transfer - Playwright Automation Suite › TC-FT-008: [Concurrency] Rapid Multi-Click UI Debounce Test @ui @critical" classname="ui\playwright\fund-transfer.spec.ts" time="0.354">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\artifacts\test-results\ui-playwright-fund-transfe-4091a-I-Debounce-Test-ui-critical-ui-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|..\artifacts\test-results\ui-playwright-fund-transfe-4091a-I-Debounce-Test-ui-critical-ui-chromium\video.webm]]
+
+[[ATTACHMENT|..\artifacts\test-results\ui-playwright-fund-transfe-4091a-I-Debounce-Test-ui-critical-ui-chromium\error-context.md]]
+
+[[ATTACHMENT|..\artifacts\test-results\ui-playwright-fund-transfe-4091a-I-Debounce-Test-ui-critical-ui-chromium\trace.zip]]
+]]>
+</system-out>
+<error message="page.goto: net::ERR_NAME_NOT_RESOLVED at https://qa-banking.bankdomain.internal/" type="Error">
+<![CDATA[  [ui-chromium] › ui\playwright\fund-transfer.spec.ts:66:7 › CoreBank UI Fund Transfer - Playwright Automation Suite › TC-FT-008: [Concurrency] Rapid Multi-Click UI Debounce Test @ui @critical 
+
+    Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://qa-banking.bankdomain.internal/
+    Call log:
+      - navigating to "https://qa-banking.bankdomain.internal/", waiting until "load"
+
+
+      40 |     });
+      41 |
+    > 42 |     await page.goto('/');
+         |                ^
+      43 |   });
+      44 |
+      45 |   test('TC-FT-001: [Happy Path] Complete Fund Transfer with Valid Balance @ui @smoke @critical', async ({ page }) => {
+        at C:\Users\TejKumarJajula\Desktop\whitePaperAgent\tests\ui\playwright\fund-transfer.spec.ts:42:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\artifacts\test-results\ui-playwright-fund-transfe-4091a-I-Debounce-Test-ui-critical-ui-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\artifacts\test-results\ui-playwright-fund-transfe-4091a-I-Debounce-Test-ui-critical-ui-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\artifacts\test-results\ui-playwright-fund-transfe-4091a-I-Debounce-Test-ui-critical-ui-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\artifacts\test-results\ui-playwright-fund-transfe-4091a-I-Debounce-Test-ui-critical-ui-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\artifacts\test-results\ui-playwright-fund-transfe-4091a-I-Debounce-Test-ui-critical-ui-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</error>
+</testcase>
+</testsuite>
+</testsuites>

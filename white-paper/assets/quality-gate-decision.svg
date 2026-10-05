@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" style="background:#ffffff; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <!-- Header -->
+  <rect x="0" y="0" width="960" height="60" fill="#991b1b" />
+  <text x="480" y="38" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="bold">Quality Gate Decision Flow: Simulated Duplicate Debit</text>
+  
+  <!-- Flow Node 1: Tests Evaluated -->
+  <rect x="330" y="90" width="300" height="55" rx="8" fill="#f8fafc" stroke="#64748b" stroke-width="2" />
+  <text x="480" y="115" text-anchor="middle" fill="#0f172a" font-size="14" font-weight="bold">20 Simulated Banking Tests</text>
+  <text x="480" y="132" text-anchor="middle" fill="#64748b" font-size="11">REQ-PAY-FT-001 (12 Acceptance Criteria)</text>
+
+  <!-- Arrow -->
+  <path d="M 480 145 L 480 175" stroke="#64748b" stroke-width="3" />
+
+  <!-- Flow Node 2: Results -->
+  <rect x="300" y="175" width="360" height="60" rx="8" fill="#f8fafc" stroke="#64748b" stroke-width="2" />
+  <text x="480" y="200" text-anchor="middle" fill="#0f172a" font-size="14" font-weight="bold">19 Passed + 1 Critical Failure</text>
+  <text x="480" y="220" text-anchor="middle" fill="#0284c7" font-size="13" font-weight="bold">95.0% Overall Pass Rate</text>
+
+  <!-- Arrow -->
+  <path d="M 480 235 L 480 265" stroke="#ef4444" stroke-width="3" />
+
+  <!-- Flow Node 3: Defect Isolation -->
+  <rect x="260" y="265" width="440" height="75" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="2" />
+  <text x="480" y="290" text-anchor="middle" fill="#991b1b" font-size="14" font-weight="bold">Duplicate Debit Anomaly Detected (TC-FT-009)</text>
+  <text x="480" y="310" text-anchor="middle" fill="#7f1d1d" font-size="12">Reconciliation Variance: -$250.00 USD (Double Posting)</text>
+  <text x="480" y="325" text-anchor="middle" fill="#7f1d1d" font-size="11">Defect Logged: DEF-FT-2026-001 [Critical / P0]</text>
+
+  <!-- Arrow -->
+  <path d="M 480 340 L 480 370" stroke="#ef4444" stroke-width="3" />
+
+  <!-- Flow Node 4: Quality Gate Evaluation -->
+  <rect x="280" y="370" width="400" height="60" rx="8" fill="#fef2f2" stroke="#b91c1c" stroke-width="2" />
+  <text x="480" y="395" text-anchor="middle" fill="#991b1b" font-size="14" font-weight="bold">Financial-Control Invariant Breached</text>
+  <text x="480" y="415" text-anchor="middle" fill="#7f1d1d" font-size="12">Gross Pass Rate Overridden by Financial Integrity Policy</text>
+
+  <!-- Arrow -->
+  <path d="M 480 430 L 480 460" stroke="#b91c1c" stroke-width="3" />
+
+  <!-- Flow Node 5: Final Decision -->
+  <rect x="310" y="460" width="340" height="65" rx="8" fill="#991b1b" stroke="#7f1d1d" stroke-width="2" />
+  <text x="480" y="490" text-anchor="middle" fill="#ffffff" font-size="18" font-weight="bold">>>> DO NOT RELEASE <<<</text>
+  <text x="480" y="510" text-anchor="middle" fill="#fecaca" font-size="12">Mandatory Human CAB &amp; QA Lead Investigation</text>
+
+  <!-- Footer Notice -->
+  <text x="480" y="565" text-anchor="middle" fill="#64748b" font-size="11" font-weight="bold">
+    SIMULATED RESULT: Generated for proof-of-concept demonstration. No real banking system was accessed.
+  </text>
+</svg>

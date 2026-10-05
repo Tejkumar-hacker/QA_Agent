@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BankingRiskScoringConfiguration",
+  "description": "Risk scoring parameters, weights, and classification boundaries for core banking QA.",
+  "version": "1.0.0",
+  "scoringFormula": "RiskScore = (FinancialImpact * 0.30) + (AccountingImpact * 0.20) + (SecurityRegulatoryImpact * 0.20) + (CustomerImpact * 0.15) + (RecoveryComplexity * 0.15)",
+  "riskClassification": {
+    "CRITICAL": {
+      "minScore": 8.0,
+      "maxScore": 10.0,
+      "description": "Direct financial discrepancy, ledger imbalance, duplicate debit, data breach, or unauthorized transaction.",
+      "releaseBlocking": true,
+      "slaForResolutionHours": 24
+    },
+    "HIGH": {
+      "minScore": 6.0,
+      "maxScore": 7.9,
+      "description": "Functional block in payment path, validation bypass, boundary limit error without money loss.",
+      "releaseBlocking": true,
+      "slaForResolutionHours": 72
+    },
+    "MEDIUM": {
+      "minScore": 4.0,
+      "maxScore": 5.9,
+      "description": "UI/UX validation glitches, transient timeout without data loss, non-blocking notification issues.",
+      "releaseBlocking": false,
+      "slaForResolutionHours": 168
+    },
+    "LOW": {
+      "minScore": 1.0,
+      "maxScore": 3.9,
+      "description": "Cosmetic defects, minor formatting, localization text inconsistencies.",
+      "releaseBlocking": false,
+      "slaForResolutionHours": 336
+    }
+  },
+  "impactFactors": {
+    "financialImpact": {
+      "10": "Duplicate debit, incorrect account balance alteration, direct monetary theft/loss",
+      "8": "Uncontrolled overdraft or limit overrun exceeding $1,000",
+      "5": "Incorrect fee calculation (< $50)",
+      "1": "Zero monetary variance"
+    },
+    "accountingImpact": {
+      "10": "General ledger out-of-balance, un-reconciled debit without corresponding credit/suspense entry",
+      "8": "Mismatched timestamping preventing EOD settlement",
+      "4": "Delayed batch posting",
+      "1": "Single atomic ledger journal balanced"
+    },
+    "securityRegulatoryImpact": {
+      "10": "Unauthenticated transfer, token bypass, unmasked PII in logs, AML/KYC evasion",
+      "7": "Session hijacking vulnerability, weak entropy on transaction references",
+      "4": "Missing non-critical audit log metadata",
+      "1": "Fully compliant with SOC2/PCI-DSS/FFIEC standards"
+    },
+    "customerImpact": {
+      "10": "Customer funds locked without explanation, false debit notification",
+      "7": "Failed transfer with confusing error message requiring branch visit",
+      "4": "Slow UI response (> 5s)",
+      "1": "Minor visual glitch"
+    },
+    "recoveryComplexity": {
+      "10": "Requires manual database intervention, wire recall, or external clearing reconciliation",
+      "7": "Requires automated manual batch saga reversal tool",
+      "4": "Auto-resolved on retry",
+      "1": "Self-healing / instant rollback"
+    }
+  },
+  "defaultToolMappingRules": {
+    "CRITICAL_FINANCIAL": ["api", "reconciliation"],
+    "CRITICAL_SECURITY": ["api", "ui_playwright"],
+    "HIGH_VALIDATION": ["api", "ui_playwright"],
+    "LEGACY_PORTAL": ["legacy_ui_selenium"],
+    "UI_RESPONSIVENESS": ["ui_playwright"]
+  }
+}

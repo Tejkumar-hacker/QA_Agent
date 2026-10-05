@@ -1,0 +1,91 @@
+{
+  "accounts": [
+    {
+      "accountId": "ACCT-CHK-001",
+      "accountNumberMasked": "XXXXXXXX1234",
+      "accountType": "CHECKING",
+      "status": "ACTIVE",
+      "currency": "USD",
+      "availableBalance": 5000.00,
+      "ledgerBalance": 5000.00,
+      "dailyLimitConfig": 10000.00,
+      "dailyLimitUtilizedToday": 0.00,
+      "customerId": "CUST-9921"
+    },
+    {
+      "accountId": "ACCT-CHK-002",
+      "accountNumberMasked": "XXXXXXXX2222",
+      "accountType": "CHECKING",
+      "status": "ACTIVE",
+      "currency": "USD",
+      "availableBalance": 100.00,
+      "ledgerBalance": 100.00,
+      "dailyLimitConfig": 10000.00,
+      "dailyLimitUtilizedToday": 0.00,
+      "customerId": "CUST-9922"
+    },
+    {
+      "accountId": "ACCT-CHK-003-LIMIT",
+      "accountNumberMasked": "XXXXXXXX3333",
+      "accountType": "SAVINGS",
+      "status": "ACTIVE",
+      "currency": "USD",
+      "availableBalance": 20000.00,
+      "ledgerBalance": 20000.00,
+      "dailyLimitConfig": 10000.00,
+      "dailyLimitUtilizedToday": 9500.00,
+      "customerId": "CUST-9923"
+    },
+    {
+      "accountId": "ACCT-FRZ-004",
+      "accountNumberMasked": "XXXXXXXX4444",
+      "accountType": "CHECKING",
+      "status": "FROZEN_DEBIT",
+      "currency": "USD",
+      "availableBalance": 1500.00,
+      "ledgerBalance": 1500.00,
+      "dailyLimitConfig": 5000.00,
+      "dailyLimitUtilizedToday": 0.00,
+      "customerId": "CUST-9924"
+    }
+  ],
+  "beneficiaries": [
+    {
+      "beneficiaryId": "BENEF-001",
+      "name": "Jane Doe (Landlord)",
+      "accountMasked": "XXXXXXXX5678",
+      "bankRouting": "021000021",
+      "status": "ACTIVE"
+    },
+    {
+      "beneficiaryId": "BENEF-INACT-002",
+      "name": "Acme Corp Suspended",
+      "accountMasked": "XXXXXXXX8888",
+      "bankRouting": "021000088",
+      "status": "BLOCKED"
+    }
+  ],
+  "transferScenarios": {
+    "happyPath": {
+      "sourceAccountId": "ACCT-CHK-001",
+      "beneficiaryId": "BENEF-001",
+      "amount": 250.00,
+      "currency": "USD",
+      "note": "Monthly Utility Bill"
+    },
+    "insufficientFunds": {
+      "sourceAccountId": "ACCT-CHK-002",
+      "beneficiaryId": "BENEF-001",
+      "amount": 500.00,
+      "currency": "USD",
+      "note": "Rent Payment"
+    },
+    "exceedLimit": {
+      "sourceAccountId": "ACCT-CHK-003-LIMIT",
+      "beneficiaryId": "BENEF-001",
+      "amount": 600.00,
+      "currency": "USD",
+      "note": "Tuition Payment"
+    }
+  }
+}

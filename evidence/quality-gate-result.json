@@ -1,0 +1,33 @@
+{
+  "evaluationId": "QG-EVAL-20261005-09221",
+  "timestamp": "2026-10-05T08:00:00.000Z",
+  "application": "CoreBank Payments Service",
+  "version": "v2.4.1-rc3",
+  "environment": "QA-Integration-01",
+  "recommendation": "DO NOT RELEASE",
+  "overallScore": 95.0,
+  "totalTests": 20,
+  "passed": 19,
+  "failed": 1,
+  "blocked": 0,
+  "criticalFailures": 1,
+  "riskSummary": {
+    "financialRisk": "CRITICAL",
+    "securityRisk": "LOW",
+    "accountingIntegrity": "OUT_OF_BALANCE"
+  },
+  "blockingReasons": [
+    "CRITICAL FINANCIAL: Detected 1 duplicate debit transaction(s) violating ledger integrity.",
+    "CRITICAL ACCOUNTING: Detected 1 general ledger out-of-balance condition(s)."
+  ],
+  "advisoryNotes": [
+    "Release pipeline gated. Escalate defect DEF-FT-2026-001 to Payments Core team."
+  ],
+  "requiredActions": [
+    "Investigate distributed locking on idempotency keys and prevent race condition debits",
+    "Audit double-entry posting pipeline for orphaned debit records"
+  ],
+  "humanReviewRequired": true,
+  "simulationIndicator": true,
+  "disclaimer": "SIMULATED RESULT: Generated for proof-of-concept demonstration. No real banking systems accessed."
+}

@@ -1,0 +1,5 @@
+# CoreBank QA Agent: Package Integrity Checksums
+# Generated: 2026-10-05T10:15:00.000Z
+# Algorithm: SHA-256
+
+0D6FB3CF2658878D512590740CE4F4A8CEACD293BEBF2C8A10EB8C59C608008F *CoreBank-QA-Agent-v1.0.0-Submission.zip

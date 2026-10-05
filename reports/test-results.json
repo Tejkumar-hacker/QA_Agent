@@ -1,0 +1,372 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--project=ui-chromium",
+      "--grep=@ui"
+    ],
+    "configFile": "C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\playwright.config.ts",
+    "rootDir": "C:/Users/TejKumarJajula/Desktop/whitePaperAgent/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/TejKumarJajula/Desktop/whitePaperAgent/artifacts/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "ui-chromium",
+        "name": "ui-chromium",
+        "testDir": "C:/Users/TejKumarJajula/Desktop/whitePaperAgent/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "/tests\\/ui\\/.*\\.spec\\.ts/"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/TejKumarJajula/Desktop/whitePaperAgent/artifacts/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "api",
+        "name": "api",
+        "testDir": "C:/Users/TejKumarJajula/Desktop/whitePaperAgent/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "/tests\\/api\\/.*\\.spec\\.ts/"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "reports/playwright-report",
+          "open": "never"
+        }
+      ],
+      [
+        "junit",
+        {
+          "outputFile": "reports/junit-results.xml"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "reports/test-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "ui\\playwright\\fund-transfer.spec.ts",
+      "file": "ui/playwright/fund-transfer.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "CoreBank UI Fund Transfer - Playwright Automation Suite",
+          "file": "ui/playwright/fund-transfer.spec.ts",
+          "line": 5,
+          "column": 6,
+          "specs": [
+            {
+              "title": "TC-FT-001: [Happy Path] Complete Fund Transfer with Valid Balance @ui @smoke @critical",
+              "ok": false,
+              "tags": [
+                "ui",
+                "smoke",
+                "critical"
+              ],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "ui-chromium",
+                  "projectName": "ui-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 4022,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://qa-banking.bankdomain.internal/\nCall log:\n\u001b[2m  - navigating to \"https://qa-banking.bankdomain.internal/\", waiting until \"load\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://qa-banking.bankdomain.internal/\nCall log:\n\u001b[2m  - navigating to \"https://qa-banking.bankdomain.internal/\", waiting until \"load\"\u001b[22m\n\n    at C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\tests\\ui\\playwright\\fund-transfer.spec.ts:42:16",
+                        "location": {
+                          "file": "C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\tests\\ui\\playwright\\fund-transfer.spec.ts",
+                          "column": 16,
+                          "line": 42
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 40 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 41 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 42 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 43 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 44 |\u001b[39m\n \u001b[90m 45 |\u001b[39m   test(\u001b[32m'TC-FT-001: [Happy Path] Complete Fund Transfer with Valid Balance @ui @smoke @critical'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\tests\\ui\\playwright\\fund-transfer.spec.ts",
+                            "column": 16,
+                            "line": 42
+                          },
+                          "message": "Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://qa-banking.bankdomain.internal/\nCall log:\n\u001b[2m  - navigating to \"https://qa-banking.bankdomain.internal/\", waiting until \"load\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 40 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 41 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 42 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 43 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 44 |\u001b[39m\n \u001b[90m 45 |\u001b[39m   test(\u001b[32m'TC-FT-001: [Happy Path] Complete Fund Transfer with Valid Balance @ui @smoke @critical'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\tests\\ui\\playwright\\fund-transfer.spec.ts:42:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-05T09:23:36.997Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\artifacts\\test-results\\ui-playwright-fund-transfe-a47e2-d-Balance-ui-smoke-critical-ui-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\artifacts\\test-results\\ui-playwright-fund-transfe-a47e2-d-Balance-ui-smoke-critical-ui-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\artifacts\\test-results\\ui-playwright-fund-transfe-a47e2-d-Balance-ui-smoke-critical-ui-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\artifacts\\test-results\\ui-playwright-fund-transfe-a47e2-d-Balance-ui-smoke-critical-ui-chromium\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\tests\\ui\\playwright\\fund-transfer.spec.ts",
+                        "column": 16,
+                        "line": 42
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ea0b585517357d6c6e2e-288849c6047815b33ab6",
+              "file": "ui/playwright/fund-transfer.spec.ts",
+              "line": 45,
+              "column": 7
+            },
+            {
+              "title": "TC-FT-002: [Negative] Transfer Exceeding Available Balance Displays Inline Error @ui @critical",
+              "ok": false,
+              "tags": [
+                "ui",
+                "critical"
+              ],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "ui-chromium",
+                  "projectName": "ui-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 350,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://qa-banking.bankdomain.internal/\nCall log:\n\u001b[2m  - navigating to \"https://qa-banking.bankdomain.internal/\", waiting until \"load\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://qa-banking.bankdomain.internal/\nCall log:\n\u001b[2m  - navigating to \"https://qa-banking.bankdomain.internal/\", waiting until \"load\"\u001b[22m\n\n    at C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\tests\\ui\\playwright\\fund-transfer.spec.ts:42:16",
+                        "location": {
+                          "file": "C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\tests\\ui\\playwright\\fund-transfer.spec.ts",
+                          "column": 16,
+                          "line": 42
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 40 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 41 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 42 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 43 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 44 |\u001b[39m\n \u001b[90m 45 |\u001b[39m   test(\u001b[32m'TC-FT-001: [Happy Path] Complete Fund Transfer with Valid Balance @ui @smoke @critical'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\tests\\ui\\playwright\\fund-transfer.spec.ts",
+                            "column": 16,
+                            "line": 42
+                          },
+                          "message": "Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://qa-banking.bankdomain.internal/\nCall log:\n\u001b[2m  - navigating to \"https://qa-banking.bankdomain.internal/\", waiting until \"load\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 40 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 41 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 42 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 43 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 44 |\u001b[39m\n \u001b[90m 45 |\u001b[39m   test(\u001b[32m'TC-FT-001: [Happy Path] Complete Fund Transfer with Valid Balance @ui @smoke @critical'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\tests\\ui\\playwright\\fund-transfer.spec.ts:42:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-05T09:23:41.949Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\artifacts\\test-results\\ui-playwright-fund-transfe-22ab8-ys-Inline-Error-ui-critical-ui-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\artifacts\\test-results\\ui-playwright-fund-transfe-22ab8-ys-Inline-Error-ui-critical-ui-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\artifacts\\test-results\\ui-playwright-fund-transfe-22ab8-ys-Inline-Error-ui-critical-ui-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\artifacts\\test-results\\ui-playwright-fund-transfe-22ab8-ys-Inline-Error-ui-critical-ui-chromium\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\tests\\ui\\playwright\\fund-transfer.spec.ts",
+                        "column": 16,
+                        "line": 42
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ea0b585517357d6c6e2e-2983d37b1f9ee5beba41",
+              "file": "ui/playwright/fund-transfer.spec.ts",
+              "line": 57,
+              "column": 7
+            },
+            {
+              "title": "TC-FT-008: [Concurrency] Rapid Multi-Click UI Debounce Test @ui @critical",
+              "ok": false,
+              "tags": [
+                "ui",
+                "critical"
+              ],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "ui-chromium",
+                  "projectName": "ui-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 354,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://qa-banking.bankdomain.internal/\nCall log:\n\u001b[2m  - navigating to \"https://qa-banking.bankdomain.internal/\", waiting until \"load\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://qa-banking.bankdomain.internal/\nCall log:\n\u001b[2m  - navigating to \"https://qa-banking.bankdomain.internal/\", waiting until \"load\"\u001b[22m\n\n    at C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\tests\\ui\\playwright\\fund-transfer.spec.ts:42:16",
+                        "location": {
+                          "file": "C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\tests\\ui\\playwright\\fund-transfer.spec.ts",
+                          "column": 16,
+                          "line": 42
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 40 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 41 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 42 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 43 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 44 |\u001b[39m\n \u001b[90m 45 |\u001b[39m   test(\u001b[32m'TC-FT-001: [Happy Path] Complete Fund Transfer with Valid Balance @ui @smoke @critical'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\tests\\ui\\playwright\\fund-transfer.spec.ts",
+                            "column": 16,
+                            "line": 42
+                          },
+                          "message": "Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://qa-banking.bankdomain.internal/\nCall log:\n\u001b[2m  - navigating to \"https://qa-banking.bankdomain.internal/\", waiting until \"load\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 40 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 41 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 42 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 43 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 44 |\u001b[39m\n \u001b[90m 45 |\u001b[39m   test(\u001b[32m'TC-FT-001: [Happy Path] Complete Fund Transfer with Valid Balance @ui @smoke @critical'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\tests\\ui\\playwright\\fund-transfer.spec.ts:42:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-05T09:23:42.945Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\artifacts\\test-results\\ui-playwright-fund-transfe-4091a-I-Debounce-Test-ui-critical-ui-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\artifacts\\test-results\\ui-playwright-fund-transfe-4091a-I-Debounce-Test-ui-critical-ui-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\artifacts\\test-results\\ui-playwright-fund-transfe-4091a-I-Debounce-Test-ui-critical-ui-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\artifacts\\test-results\\ui-playwright-fund-transfe-4091a-I-Debounce-Test-ui-critical-ui-chromium\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\TejKumarJajula\\Desktop\\whitePaperAgent\\tests\\ui\\playwright\\fund-transfer.spec.ts",
+                        "column": 16,
+                        "line": 42
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ea0b585517357d6c6e2e-093e6dab046ed44db011",
+              "file": "ui/playwright/fund-transfer.spec.ts",
+              "line": 66,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-05T09:23:36.457Z",
+    "duration": 7062.174,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 3,
+    "flaky": 0
+  }
+}

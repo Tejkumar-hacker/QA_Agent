@@ -1,0 +1,270 @@
+name: CoreBank QA Agent
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      input_file:
+        description: 'Synthetic JSON or CSV file to evaluate (must be inside input/)'
+        required: true
+        default: 'input/sample-pass.json'
+        type: string
+      execution_label:
+        description: 'Optional name for the evaluation run'
+        required: false
+        default: 'manual-client-evaluation'
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: false
+
+jobs:
+  validate-framework:
+    name: Validate Framework
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js (Active LTS)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run TypeScript type check
+        run: npm run typecheck
+
+      - name: Run framework validation (Recon + Quality Gate + Client Engine)
+        run: npm run validate
+
+  evaluate-client-data:
+    name: Evaluate Client Data
+    needs: validate-framework
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      request_id: ${{ steps.agent-eval.outputs.request_id }}
+      recommendation: ${{ steps.agent-eval.outputs.recommendation }}
+      agent_exit_code: ${{ steps.agent-eval.outputs.agent_exit_code }}
+      result_directory: ${{ steps.agent-eval.outputs.result_directory }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js (Active LTS)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Resolve and validate input file path
+        id: resolve-input
+        run: |
+          # Default input file if triggered by push/pr, or workflow_dispatch input
+          INPUT_SELECTION="${{ github.event.inputs.input_file || 'input/sample-pass.json' }}"
+          echo "Requested input file: ${INPUT_SELECTION}"
+
+          # Strip leading ./ if present
+          CLEAN_PATH=$(echo "${INPUT_SELECTION}" | sed 's/^\.\///')
+
+          # Security checks: must start with input/, only .json or .csv, no parent traversal, no absolute path
+          if [[ "${CLEAN_PATH}" =~ ^/ ]] || [[ "${CLEAN_PATH}" =~ ^[a-zA-Z]: ]] || [[ "${CLEAN_PATH}" =~ \.\. ]]; then
+            echo "::error::Security rejection: absolute path or parent traversal detected in '${INPUT_SELECTION}'"
+            exit 2
+          fi
+
+          if [[ ! "${CLEAN_PATH}" =~ ^input/ ]]; then
+            echo "::error::Security rejection: file must be located inside the 'input/' folder. Received: '${CLEAN_PATH}'"
+            exit 2
+          fi
+
+          if [[ ! "${CLEAN_PATH}" =~ \.(json|csv)$ ]]; then
+            echo "::error::Security rejection: only .json and .csv files are supported. Received: '${CLEAN_PATH}'"
+            exit 2
+          fi
+
+          if [[ ! -f "${CLEAN_PATH}" ]]; then
+            echo "::error::Input file does not exist: '${CLEAN_PATH}'"
+            exit 2
+          fi
+
+          if [[ ! -s "${CLEAN_PATH}" ]]; then
+            echo "::error::Input file is empty: '${CLEAN_PATH}'"
+            exit 2
+          fi
+
+          echo "validated_path=${CLEAN_PATH}" >> $GITHUB_OUTPUT
+
+      - name: Execute CoreBank QA Agent
+        id: agent-eval
+        run: |
+          INPUT_FILE="${{ steps.resolve-input.outputs.validated_path }}"
+          RUN_ID="${{ github.run_id }}"
+          RUN_ATTEMPT="${{ github.run_attempt }}"
+          RUN_OUTPUT_DIR="results/github-run-${RUN_ID}-${RUN_ATTEMPT}"
+
+          mkdir -p "${RUN_OUTPUT_DIR}"
+
+          echo "Executing CoreBank QA Agent on '${INPUT_FILE}' into '${RUN_OUTPUT_DIR}'..."
+          
+          # Temporarily capture exit code so evidence can always be uploaded
+          set +e
+          npm run agent -- --input "${INPUT_FILE}" --output "${RUN_OUTPUT_DIR}"
+          AGENT_CODE=$?
+          set -e
+
+          echo "Agent execution completed with exit code: ${AGENT_CODE}"
+          echo "agent_exit_code=${AGENT_CODE}" >> $GITHUB_OUTPUT
+          echo "result_directory=${RUN_OUTPUT_DIR}" >> $GITHUB_OUTPUT
+
+          # Map exit code to quality gate recommendation
+          case ${AGENT_CODE} in
+            0)
+              RECOMMENDATION="PASS"
+              ;;
+            1)
+              RECOMMENDATION="PASS_WITH_RISK"
+              ;;
+            2)
+              RECOMMENDATION="INPUT_REJECTED"
+              ;;
+            3)
+              RECOMMENDATION="DO_NOT_RELEASE"
+              ;;
+            4)
+              RECOMMENDATION="INCONCLUSIVE"
+              ;;
+            *)
+              RECOMMENDATION="INTERNAL_AGENT_ERROR"
+              ;;
+          esac
+          echo "recommendation=${RECOMMENDATION}" >> $GITHUB_OUTPUT
+
+          # Locate generated quality-gate-result.json if exists
+          QG_FILE=$(find "${RUN_OUTPUT_DIR}" -name "quality-gate-result.json" | head -n 1)
+          if [[ -f "${QG_FILE}" ]]; then
+            REQ_ID=$(grep -o '"requestId": "[^"]*' "${QG_FILE}" | head -n 1 | cut -d'"' -f4)
+            echo "request_id=${REQ_ID}" >> $GITHUB_OUTPUT
+          else
+            echo "request_id=UNKNOWN-REQUEST" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Generate GitHub Actions Job Summary
+        if: always()
+        run: |
+          INPUT_FILE="${{ steps.resolve-input.outputs.validated_path || github.event.inputs.input_file || 'input/sample-pass.json' }}"
+          REQ_ID="${{ steps.agent-eval.outputs.request_id || 'UNKNOWN' }}"
+          RECOMMENDATION="${{ steps.agent-eval.outputs.recommendation || 'INTERNAL_AGENT_ERROR' }}"
+          EXIT_CODE="${{ steps.agent-eval.outputs.agent_exit_code || '5' }}"
+          RUN_OUTPUT_DIR="${{ steps.agent-eval.outputs.result_directory || 'results' }}"
+
+          echo "# CoreBank QA Agent Evaluation Result" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "> **SIMULATED RESULT**" >> $GITHUB_STEP_SUMMARY
+          echo "> This result was generated for proof-of-concept demonstration." >> $GITHUB_STEP_SUMMARY
+          echo "> It was not produced by execution against a real banking system." >> $GITHUB_STEP_SUMMARY
+          echo "> No real financial transaction was performed." >> $GITHUB_STEP_SUMMARY
+          echo "> No real customer data was used." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Parameter | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|---|---|" >> $GITHUB_STEP_SUMMARY
+          echo "| **Workflow Run ID** | \`${{ github.run_id }}\` (Attempt: \`${{ github.run_attempt }}\`) |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Input File** | \`${INPUT_FILE}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Request ID** | \`${REQ_ID}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Execution Mode** | \`SIMULATED\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Data Classification** | \`SYNTHETIC\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Agent Exit Code** | \`${EXIT_CODE}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Quality-Gate Recommendation** | **\`${RECOMMENDATION}\`** |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Evidence Artifact** | \`corebank-agent-results-${{ github.run_number }}-${{ github.run_attempt }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Human Review Required** | \`Mandatory prior to production\` |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Include result summary markdown content if generated
+          SUMMARY_MD=$(find "${RUN_OUTPUT_DIR}" -name "result-summary.md" | head -n 1)
+          if [[ -f "${SUMMARY_MD}" ]]; then
+            echo "### Detailed Evaluation Summary" >> $GITHUB_STEP_SUMMARY
+            cat "${SUMMARY_MD}" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Upload Quality Gate Evidence Artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: corebank-agent-results-${{ github.run_number }}-${{ github.run_attempt }}
+          path: results/
+          retention-days: 30
+          if-no-files-found: warn
+
+      - name: Enforce Quality Gate Policy
+        run: |
+          EXIT_CODE="${{ steps.agent-eval.outputs.agent_exit_code }}"
+          RECOMMENDATION="${{ steps.agent-eval.outputs.recommendation }}"
+
+          echo "Evaluating Quality Gate Policy (Exit Code: ${EXIT_CODE}, Recommendation: ${RECOMMENDATION})..."
+
+          case ${EXIT_CODE} in
+            0)
+              echo ">>> QUALITY GATE PASSED: All financial invariants satisfied."
+              exit 0
+              ;;
+            1)
+              echo ">>> QUALITY GATE PASS WITH RISK: Non-critical advisory telemetry findings. Routed to human review."
+              exit 0
+              ;;
+            2)
+              echo "::error::QUALITY GATE FAILED: Input rejected due to schema, security, or masking violation."
+              exit 2
+              ;;
+            3)
+              echo "::error::QUALITY GATE BLOCKED: DO NOT RELEASE. Critical financial/security invariant violated."
+              exit 3
+              ;;
+            4)
+              echo "::error::QUALITY GATE INCONCLUSIVE: Missing mandatory evidence or incomplete financial data."
+              exit 4
+              ;;
+            *)
+              echo "::error::QUALITY GATE FAILED: Internal agent execution error."
+              exit 5
+              ;;
+          esac
+
+  human-review-gate:
+    name: Human Review & Risk Acceptance
+    needs: evaluate-client-data
+    if: needs.evaluate-client-data.outputs.recommendation == 'PASS_WITH_RISK'
+    runs-on: ubuntu-latest
+    environment:
+      name: corebank-human-review
+    steps:
+      - name: Record Human Review Acknowledgment
+        run: |
+          echo "=================================================="
+          echo "   COREBANK QA AGENT: PROTECTED HUMAN REVIEW GATE "
+          echo "=================================================="
+          echo "Request ID:      ${{ needs.evaluate-client-data.outputs.request_id }}"
+          echo "Recommendation:  ${{ needs.evaluate-client-data.outputs.recommendation }}"
+          echo "Agent Exit Code: ${{ needs.evaluate-client-data.outputs.agent_exit_code }}"
+          echo "Artifact:        corebank-agent-results-${{ github.run_number }}-${{ github.run_attempt }}"
+          echo ""
+          echo "This job was triggered because the QA Agent evaluated the dataset"
+          echo "as PASS WITH RISK. Authorized QA Leads / CAB Reviewers must inspect"
+          echo "the uploaded evidence artifacts before approving this environment gate."
+          echo "=================================================="

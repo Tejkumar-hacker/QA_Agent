@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TransferInitiateResponse",
+  "type": "object",
+  "required": ["status", "transactionRef", "correlationId", "timestamp", "sourceAccount", "beneficiaryId", "amount", "currency"],
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": ["COMPLETED", "PENDING", "REVERSED", "REJECTED"]
+    },
+    "transactionRef": {
+      "type": "string",
+      "pattern": "^TXN-\\d{8}-[A-Za-z0-9]{6,12}$"
+    },
+    "correlationId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sourceAccount": {
+      "type": "string",
+      "pattern": "^XXXXXXXX\\d{4}$"
+    },
+    "beneficiaryId": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "number",
+      "minimum": 0.01
+    },
+    "currency": {
+      "type": "string",
+      "enum": ["USD", "EUR", "GBP", "CAD"]
+    },
+    "fee": {
+      "type": "number",
+      "minimum": 0.0
+    },
+    "remainingDailyLimit": {
+      "type": "number",
+      "minimum": 0.0
+    }
+  },
+  "additionalProperties": false
+}

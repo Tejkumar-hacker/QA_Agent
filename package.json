@@ -1,0 +1,42 @@
+{
+  "name": "corebank-qa-agent",
+  "version": "1.0.0",
+  "description": "AI-assisted automation testing agent and framework for core banking systems",
+  "main": "dist/index.js",
+  "scripts": {
+    "agent": "ts-node scripts/run-agent.ts",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "playwright test",
+    "test:client": "ts-node tests/unit/client-engine.spec.ts",
+    "test:ui": "playwright test --project=ui-chromium --grep=@ui",
+    "test:api": "playwright test --project=api --grep=@api",
+    "test:critical": "playwright test --grep=@critical",
+    "test:reconciliation": "ts-node tests/reconciliation/validate-ledger.ts",
+    "test:simulate": "ts-node scripts/simulate-execution.ts",
+    "simulate:execution": "ts-node scripts/simulate-execution.ts",
+    "quality-gate": "ts-node scripts/evaluate-quality-gate.ts",
+    "evaluate:gate": "ts-node scripts/evaluate-quality-gate.ts",
+    "validate": "tsc --noEmit && ts-node tests/reconciliation/validate-ledger.ts && ts-node scripts/evaluate-quality-gate.ts && ts-node tests/unit/client-engine.spec.ts",
+    "report": "ts-node scripts/simulate-execution.ts"
+  },
+  "keywords": [
+    "banking",
+    "qa-agent",
+    "playwright",
+    "test-automation",
+    "synthetic-data",
+    "reconciliation",
+    "fintech"
+  ],
+  "author": "CoreBank QA Architecture Team",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^20.19.43",
+    "ajv": "^8.20.0",
+    "dotenv": "^18.0.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}

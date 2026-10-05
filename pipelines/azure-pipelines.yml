@@ -1,0 +1,129 @@
+# [LEGACY / REFERENCE ONLY] Azure DevOps CI/CD Quality Pipeline for Core Banking QA Agent
+# PRIMARY CI/CD PLATFORM: GitHub Actions (.github/workflows/corebank-qa-agent.yml)
+# This file is retained as an optional alternative reference implementation.
+name: $(Date:yyyyMMdd)$(Rev:.r)-corebank-qa-pipeline
+
+trigger:
+  branches:
+    include:
+      - main
+      - release/*
+  paths:
+    include:
+      - src/**
+      - tests/**
+      - requirements/**
+
+pr:
+  branches:
+    include:
+      - main
+      - release/*
+
+variables:
+  NODE_VERSION: '20.x'
+  QA_ENVIRONMENT: 'qa'
+  COREBANK_BASE_URL: 'https://qa-banking.bankdomain.internal'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+  - stage: BuildAndValidate
+    displayName: 'Stage 1: Lint, Build & Static Security Scan'
+    jobs:
+      - job: StaticChecks
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: $(NODE_VERSION)
+            displayName: 'Install Node.js $(NODE_VERSION)'
+
+          - script: |
+              npm ci
+              npm run build
+            displayName: 'Compile TypeScript & Check Types'
+
+  - stage: APISmokeAndCritical
+    displayName: 'Stage 2: Payments API & Critical Path Tests'
+    dependsOn: BuildAndValidate
+    jobs:
+      - job: RunApiTests
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: $(NODE_VERSION)
+          - script: npm ci
+          - script: |
+              npx playwright test --project=api --grep=@critical
+            displayName: 'Execute Critical Banking API Tests'
+            continueOnError: true
+
+  - stage: UIE2ETesting
+    displayName: 'Stage 3: Playwright UI Journey & Debounce Testing'
+    dependsOn: APISmokeAndCritical
+    jobs:
+      - job: RunPlaywrightUI
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: $(NODE_VERSION)
+          - script: npm ci
+          - script: npx playwright install --with-deps chromium
+            displayName: 'Install Playwright Browsers'
+          - script: |
+              npx playwright test --project=ui-chromium
+            displayName: 'Execute Playwright UI Test Suite'
+            continueOnError: true
+
+  - stage: FinancialReconciliation
+    displayName: 'Stage 4: General Ledger Reconciliation & Double-Entry Audit'
+    dependsOn: UIE2ETesting
+    jobs:
+      - job: RunLedgerReconciliation
+        steps:
+          - script: |
+              npm run test:recon
+            displayName: 'Validate Double-Entry Accounting Invariants'
+            continueOnError: true
+
+  - stage: QualityGateAndTriage
+    displayName: 'Stage 5: AI Failure Analysis & Risk Quality Gate'
+    dependsOn: FinancialReconciliation
+    jobs:
+      - job: EvaluateGateAndDefects
+        steps:
+          - script: |
+              npm run evaluate:gate
+            displayName: 'AI Decision-Support Quality Gate Evaluation'
+
+          - task: PublishTestResults@2
+            condition: always()
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: 'reports/junit-results.xml'
+              mergeTestResults: true
+              failTaskOnFailedTests: false
+            displayName: 'Publish JUnit Test Results'
+
+          - task: PublishPipelineArtifact@1
+            condition: always()
+            inputs:
+              targetPath: 'artifacts/'
+              artifact: 'Sanitized-QA-Evidence'
+            displayName: 'Publish Sanitized Traces & Evidence'
+
+  - stage: HumanReleaseApproval
+    displayName: 'Stage 6: Human CAB & QA Lead Sign-Off'
+    dependsOn: QualityGateAndTriage
+    condition: succeeded('QualityGateAndTriage')
+    jobs:
+      - job: ManualSignoff
+        pool: server
+        steps:
+          - task: ManualValidation@0
+            timeoutInMinutes: 1440
+            inputs:
+              notifyUsers: 'qa-leads@bankdomain.internal,release-manager@bankdomain.internal'
+              instructions: 'Review CoreBank QA Agent evidence, defect drafts, and ledger reconciliation before granting production deployment approval.'
+              onTimeout: 'reject'

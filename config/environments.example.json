@@ -1,0 +1,52 @@
+{
+  "environments": {
+    "qa": {
+      "baseUrl": "https://qa-banking.bankdomain.internal",
+      "apiBaseUrl": "https://qa-api.bankdomain.internal/v1",
+      "reconciliationApiUrl": "https://qa-recon.bankdomain.internal/v1",
+      "mockServiceUrl": "https://qa-mocks.bankdomain.internal",
+      "dbConnection": {
+        "readOnly": true,
+        "host": "qa-db-readonly.bankdomain.internal",
+        "port": 5432,
+        "database": "corebank_qa",
+        "userEnvVar": "COREBANK_QA_DB_USER",
+        "passwordEnvVar": "COREBANK_QA_DB_PASS"
+      },
+      "timeouts": {
+        "apiTimeoutMs": 10000,
+        "uiNavigationMs": 15000,
+        "pollingIntervalMs": 500,
+        "reversalSlaSec": 300
+      }
+    },
+    "sit": {
+      "baseUrl": "https://sit-banking.bankdomain.internal",
+      "apiBaseUrl": "https://sit-api.bankdomain.internal/v1",
+      "reconciliationApiUrl": "https://sit-recon.bankdomain.internal/v1",
+      "mockServiceUrl": "https://sit-mocks.bankdomain.internal",
+      "dbConnection": {
+        "readOnly": true,
+        "host": "sit-db-readonly.bankdomain.internal",
+        "port": 5432,
+        "database": "corebank_sit",
+        "userEnvVar": "COREBANK_SIT_DB_USER",
+        "passwordEnvVar": "COREBANK_SIT_DB_PASS"
+      },
+      "timeouts": {
+        "apiTimeoutMs": 15000,
+        "uiNavigationMs": 20000,
+        "pollingIntervalMs": 1000,
+        "reversalSlaSec": 300
+      }
+    }
+  },
+  "security": {
+    "maskingRegexes": {
+      "account": "\\b(\\d{4})\\d{4}(\\d{4})\\b",
+      "jwt": "Bearer\\s+[A-Za-z0-9-_=]+\\.[A-Za-z0-9-_=]+\\.?[A-Za-z0-9-_.+/=]*",
+      "ssn": "\\b\\d{3}-\\d{2}-\\d{4}\\b"
+    },
+    "maskingReplacement": "XXXXXXXX$2"
+  }
+}
