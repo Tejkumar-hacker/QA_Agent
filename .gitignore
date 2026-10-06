@@ -24,3 +24,15 @@ Thumbs.db
 
 # ZIP archives
 *.zip
+
+# Playwright test run artifacts
+artifacts/
+
+# Generated Playwright HTML report
+reports/playwright-report/
+
+# Temporary local CI check results
+results/ci-check-*/
+
+# Submission archives
+*.zip
