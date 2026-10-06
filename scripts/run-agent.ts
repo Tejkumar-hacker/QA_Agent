@@ -1,27 +1,36 @@
 #!/usr/bin/env ts-node
 /**
  * CoreBank QA Agent - Single-Command Client CLI Entrypoint
- * 
+ *
  * Usage:
  *   npm run agent -- --input ./input/test-data.json
  *   npm run agent -- --input ./input/test-data.csv
  *   npm run agent -- --input ./input/test-data.json --output ./custom-results --overwrite
+ *
+ * Auto CI/CD:
+ *   After evaluation the agent automatically git-commits the input file and
+ *   generated results, pushes to origin, and triggers the GitHub Actions
+ *   workflow — provided GITHUB_TOKEN, GITHUB_OWNER, and GITHUB_REPO are set
+ *   in .env (copy from .env.example).
  */
 
 import * as fs from 'fs';
 import * as path from 'path';
 import { CoreBankClientEngine, EvaluationResult, ExitCode } from './CoreBankClientEngine';
+import { pushAndTriggerCi } from './push-and-trigger-ci';
 
 interface ParsedArgs {
   inputPath?: string;
   outputPath: string;
   overwrite: boolean;
+  skipCi: boolean;
 }
 
 function parseCliArgs(args: string[]): ParsedArgs {
   let inputPath: string | undefined;
   let outputPath = './results';
   let overwrite = false;
+  let skipCi = false;
 
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
@@ -33,10 +42,12 @@ function parseCliArgs(args: string[]): ParsedArgs {
       i++;
     } else if (arg === '--overwrite') {
       overwrite = true;
+    } else if (arg === '--skip-ci') {
+      skipCi = true;
     }
   }
 
-  return { inputPath, outputPath, overwrite };
+  return { inputPath, outputPath, overwrite, skipCi };
 }
 
 function printConsoleSummary(result: EvaluationResult, outputFolder: string): void {
@@ -78,8 +89,8 @@ function printConsoleSummary(result: EvaluationResult, outputFolder: string): vo
   console.log('==================================================\n');
 }
 
-function main(): void {
-  const { inputPath, outputPath, overwrite } = parseCliArgs(process.argv.slice(2));
+async function main(): Promise<void> {
+  const { inputPath, outputPath, overwrite, skipCi } = parseCliArgs(process.argv.slice(2));
 
   if (!inputPath) {
     console.error('Error: Missing required --input argument.\n');
@@ -144,6 +155,11 @@ function main(): void {
     fs.writeFileSync(path.join(resolvedOutput, 'batch-summary.json'), JSON.stringify(batchSummary, null, 2));
     console.log(`[COREBANK AGENT] Batch summary written to: ${path.join(resolvedOutput, 'batch-summary.json')}`);
 
+    if (!skipCi) {
+      const label = results[0]?.requestId ?? path.basename(resolvedInput, path.extname(resolvedInput));
+      await pushAndTriggerCi({ inputFilePath: resolvedInput, resultsFolderPath: resolvedOutput, executionLabel: label });
+    }
+
     process.exit(worstExitCode);
   } else {
     let rawJson: any;
@@ -158,15 +174,21 @@ function main(): void {
     const outFolder = CoreBankClientEngine.writeOutputArtifacts(evaluation, resolvedOutput, overwrite);
     printConsoleSummary(evaluation, outFolder);
 
+    if (!skipCi) {
+      await pushAndTriggerCi({
+        inputFilePath: resolvedInput,
+        resultsFolderPath: path.resolve(outFolder),
+        executionLabel: evaluation.requestId,
+      });
+    }
+
     process.exit(evaluation.exitCode);
   }
 }
 
 if (require.main === module) {
-  try {
-    main();
-  } catch (err: any) {
+  main().catch((err: any) => {
     console.error(`Internal Agent Error: ${err?.message || 'Unexpected failure'}`);
     process.exit(ExitCode.INTERNAL_AGENT_ERROR);
-  }
+  });
 }

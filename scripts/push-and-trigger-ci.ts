@@ -1,0 +1,177 @@
+/**
+ * push-and-trigger-ci.ts
+ *
+ * Called automatically at the end of run-agent.ts.
+ * Performs three steps in sequence:
+ *   1. git add + commit the input file and the generated results folder
+ *   2. git push origin main
+ *   3. POST /repos/{owner}/{repo}/actions/workflows/{id}/dispatches
+ *      to trigger the CoreBank QA Agent GitHub Actions workflow
+ *
+ * Required environment variables (set in .env or CI secrets):
+ *   GITHUB_TOKEN  – Personal Access Token or fine-grained token with
+ *                   Contents: write  and  Actions: write  scopes.
+ *   GITHUB_OWNER  – Repository owner, e.g. "Tejkumar-hacker"
+ *   GITHUB_REPO   – Repository name,  e.g. "whitePaperAgent"
+ *   GITHUB_BRANCH – Branch to push to and dispatch against (default: main)
+ *   GITHUB_WORKFLOW_FILE – Workflow file name (default: corebank-qa-agent.yml)
+ */
+
+import { execSync } from 'child_process';
+import * as https from 'https';
+import * as path from 'path';
+import * as fs from 'fs';
+
+// Load .env if present (best-effort; not a hard dependency)
+try {
+  const envPath = path.resolve(process.cwd(), '.env');
+  if (fs.existsSync(envPath)) {
+    const lines = fs.readFileSync(envPath, 'utf-8').split('\n');
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) continue;
+      const eqIdx = trimmed.indexOf('=');
+      if (eqIdx === -1) continue;
+      const key = trimmed.slice(0, eqIdx).trim();
+      const val = trimmed.slice(eqIdx + 1).trim();
+      if (!process.env[key]) process.env[key] = val;
+    }
+  }
+} catch {
+  // silently ignore – env vars may already be set by the shell
+}
+
+export interface CiTriggerOptions {
+  /** Absolute path to the input file that was evaluated */
+  inputFilePath: string;
+  /** Absolute path to the results output folder that was written */
+  resultsFolderPath: string;
+  /** Short label shown in the GitHub Actions run name */
+  executionLabel?: string;
+}
+
+/**
+ * Run a shell command, stream its stdout/stderr to the console, and throw
+ * on non-zero exit so callers can surface failures clearly.
+ */
+function run(cmd: string, cwd: string): void {
+  console.log(`[CI] $ ${cmd}`);
+  execSync(cmd, { stdio: 'inherit', cwd });
+}
+
+/**
+ * POST a JSON body to the GitHub REST API over HTTPS.
+ * Returns the HTTP status code.
+ */
+function githubPost(apiPath: string, token: string, body: object): Promise<number> {
+  return new Promise((resolve, reject) => {
+    const payload = JSON.stringify(body);
+    const options: https.RequestOptions = {
+      hostname: 'api.github.com',
+      port: 443,
+      path: apiPath,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(payload),
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+        'User-Agent': 'CoreBank-QA-Agent/1.0',
+      },
+    };
+
+    const req = https.request(options, (res) => {
+      // Drain the response so the socket is released
+      res.resume();
+      res.on('end', () => resolve(res.statusCode ?? 0));
+    });
+
+    req.on('error', reject);
+    req.write(payload);
+    req.end();
+  });
+}
+
+/**
+ * Main entry-point called by run-agent.ts after evaluation is complete.
+ */
+export async function pushAndTriggerCi(opts: CiTriggerOptions): Promise<void> {
+  const token = process.env.GITHUB_TOKEN;
+  const owner = process.env.GITHUB_OWNER;
+  const repo = process.env.GITHUB_REPO;
+  const branch = process.env.GITHUB_BRANCH || 'main';
+  const workflowFile = process.env.GITHUB_WORKFLOW_FILE || 'corebank-qa-agent.yml';
+
+  if (!token || !owner || !repo) {
+    console.warn(
+      '[CI] Skipping auto CI/CD: GITHUB_TOKEN, GITHUB_OWNER, and GITHUB_REPO ' +
+      'must all be set in .env (or the shell environment).'
+    );
+    return;
+  }
+
+  const repoRoot = process.cwd();
+
+  // ── Step 1: git commit ─────────────────────────────────────────────────────
+  // Make the paths relative to the repo root for git
+  const relInput = path.relative(repoRoot, opts.inputFilePath).replace(/\\/g, '/');
+  const relResults = path.relative(repoRoot, opts.resultsFolderPath).replace(/\\/g, '/');
+  const label = opts.executionLabel ?? path.basename(opts.inputFilePath, path.extname(opts.inputFilePath));
+
+  console.log('\n[CI] ── Step 1/3: Staging and committing files ───────────────');
+  try {
+    run(`git add "${relInput}" "${relResults}"`, repoRoot);
+  } catch {
+    // If there is nothing new to stage git exits 0 anyway; guard the diff check
+  }
+
+  // Check if there is anything to commit
+  const diffOutput = execSync('git diff --cached --name-only', { cwd: repoRoot }).toString().trim();
+  if (diffOutput.length === 0) {
+    console.log('[CI] Nothing new to commit – files already tracked and unchanged.');
+  } else {
+    const commitMsg =
+      `ci(agent): auto-commit results for ${label}\n\n` +
+      `Input:   ${relInput}\n` +
+      `Results: ${relResults}\n\n` +
+      `Generated by CoreBank QA Agent (SIMULATED/SYNTHETIC data only).`;
+    run(`git commit -m ${JSON.stringify(commitMsg)}`, repoRoot);
+  }
+
+  // ── Step 2: git push ───────────────────────────────────────────────────────
+  console.log('\n[CI] ── Step 2/3: Pushing to origin ──────────────────────────');
+  run(`git push origin ${branch}`, repoRoot);
+
+  // ── Step 3: trigger workflow_dispatch ─────────────────────────────────────
+  console.log('\n[CI] ── Step 3/3: Triggering GitHub Actions workflow ─────────');
+
+  // The input file passed to the workflow must be relative to the repo root
+  // and start with "input/" — exactly what the workflow's security check expects
+  const workflowInputFile = relInput.startsWith('input/') ? relInput : `input/${path.basename(relInput)}`;
+
+  const dispatchBody = {
+    ref: branch,
+    inputs: {
+      input_file: workflowInputFile,
+      execution_label: label,
+    },
+  };
+
+  const apiPath = `/repos/${owner}/${repo}/actions/workflows/${workflowFile}/dispatches`;
+  const statusCode = await githubPost(apiPath, token, dispatchBody);
+
+  // 204 No Content = success; anything else is an error
+  if (statusCode === 204) {
+    console.log(
+      `[CI] ✓ Workflow dispatch accepted (HTTP 204).\n` +
+      `     Monitor run at: https://github.com/${owner}/${repo}/actions`
+    );
+  } else {
+    console.error(
+      `[CI] ✗ Workflow dispatch returned unexpected HTTP ${statusCode}.\n` +
+      `     Check that GITHUB_TOKEN has "Actions: write" permission and\n` +
+      `     the workflow file name is correct (${workflowFile}).`
+    );
+  }
+}
