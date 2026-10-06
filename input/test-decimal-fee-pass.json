@@ -1,0 +1,41 @@
+{
+  "metadata": {
+    "requestId": "CLIENT-TEST-2026-005",
+    "requirementId": "REQ-PAY-FT-001",
+    "executionMode": "SIMULATED",
+    "dataClassification": "SYNTHETIC"
+  },
+  "transaction": {
+    "transactionReference": "TXN-SYNTH-20261006-005",
+    "correlationId": "CORR-SYNTH-20261006-005",
+    "idempotencyKey": "IDEMP-SYNTH-20261006-005",
+    "currency": "USD"
+  },
+  "expected": {
+    "openingBalance": 1000.00,
+    "transferAmount": 123.45,
+    "transferFee": 1.55,
+    "totalDebit": 125.00,
+    "beneficiaryCredit": 123.45,
+    "debitPostingCount": 1,
+    "creditPostingCount": 1,
+    "closingBalance": 875.00,
+    "auditRecordRequired": true
+  },
+  "observed": {
+    "totalDebit": 125.00,
+    "beneficiaryCredit": 123.45,
+    "debitPostingCount": 1,
+    "creditPostingCount": 1,
+    "closingBalance": 875.00,
+    "auditRecordCreated": true,
+    "reversalRequired": false,
+    "reversalCompleted": false,
+    "sensitiveDataExposed": false
+  },
+  "security": {
+    "sourceAccountMasked": "XXXXXXXX6152",
+    "beneficiaryAccountMasked": "XXXXXXXX8047",
+    "authenticationToken": "[REDACTED]"
+  }
+}
