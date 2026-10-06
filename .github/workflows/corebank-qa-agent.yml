@@ -34,10 +34,10 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.3.0
+        uses: actions/checkout@v7.0.1
 
       - name: Setup Node.js (Active LTS)
-        uses: actions/setup-node@v4.4.1
+        uses: actions/setup-node@v7.0.0
         with:
           node-version: "22"
           cache: 'npm'
@@ -63,10 +63,10 @@ jobs:
       result_directory: ${{ steps.agent-eval.outputs.result_directory }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.3.0
+        uses: actions/checkout@v7.0.1
 
       - name: Setup Node.js (Active LTS)
-        uses: actions/setup-node@v4.4.1
+        uses: actions/setup-node@v7.0.0
         with:
           node-version: "22"
           cache: 'npm'
@@ -204,7 +204,7 @@ jobs:
           fi
 
       - name: Upload Quality Gate Evidence Artifacts
-        uses: actions/upload-artifact@v4.7.0
+        uses: actions/upload-artifact@v7.0.1
         if: always()
         with:
           name: corebank-agent-results-${{ github.run_number }}-${{ github.run_attempt }}
