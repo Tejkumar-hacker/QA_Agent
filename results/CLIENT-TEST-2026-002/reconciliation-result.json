@@ -1,0 +1,29 @@
+{
+  "requestId": "CLIENT-TEST-2026-002",
+  "transactionReference": "TXN-SYNTH-20261005-002",
+  "correlationId": "CORR-SYNTH-20261005-002",
+  "idempotencyKey": "IDEMP-SYNTH-20261005-002",
+  "currency": "USD",
+  "financials": {
+    "openingBalance": 2000,
+    "expectedDebit": 405,
+    "observedDebit": 405,
+    "debitVariance": 0,
+    "expectedBeneficiaryCredit": 400,
+    "observedBeneficiaryCredit": 0,
+    "creditVariance": 400,
+    "expectedClosingBalance": 1595,
+    "observedClosingBalance": 1595,
+    "balanceVariance": 0,
+    "expectedDebitPostings": 1,
+    "observedDebitPostings": 1,
+    "expectedCreditPostings": 1,
+    "observedCreditPostings": 0,
+    "netReconciliationVariance": -400
+  },
+  "isBalanced": false,
+  "findings": [
+    "MISSING_CREDIT",
+    "FAILED_REVERSAL"
+  ]
+}

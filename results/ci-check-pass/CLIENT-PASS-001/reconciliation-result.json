@@ -1,0 +1,26 @@
+{
+  "requestId": "CLIENT-PASS-001",
+  "transactionReference": "TXN-20260510-984372",
+  "correlationId": "CORR-TEST-PASS-001",
+  "idempotencyKey": "IDEMP-TEST-PASS-001",
+  "currency": "USD",
+  "financials": {
+    "openingBalance": 1500,
+    "expectedDebit": 250,
+    "observedDebit": 250,
+    "debitVariance": 0,
+    "expectedBeneficiaryCredit": 250,
+    "observedBeneficiaryCredit": 250,
+    "creditVariance": 0,
+    "expectedClosingBalance": 1250,
+    "observedClosingBalance": 1250,
+    "balanceVariance": 0,
+    "expectedDebitPostings": 1,
+    "observedDebitPostings": 1,
+    "expectedCreditPostings": 1,
+    "observedCreditPostings": 1,
+    "netReconciliationVariance": 0
+  },
+  "isBalanced": true,
+  "findings": []
+}

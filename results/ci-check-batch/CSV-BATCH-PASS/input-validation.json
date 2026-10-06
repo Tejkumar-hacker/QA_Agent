@@ -1,0 +1,10 @@
+{
+  "requestId": "CSV-BATCH-PASS",
+  "requirementId": "REQ-PAY-FT-001",
+  "status": "VALID",
+  "validatedAt": "2026-10-05T10:29:19.606Z",
+  "issues": [],
+  "dataClassification": "SYNTHETIC",
+  "maskedFieldsVerified": true,
+  "secretsRedactedVerified": true
+}

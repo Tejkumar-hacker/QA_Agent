@@ -1,0 +1,23 @@
+{
+  "requestId": "CLIENT-TEST-2026-002",
+  "requirementId": "REQ-PAY-FT-001",
+  "executionMode": "SIMULATED",
+  "inputStatus": "VALID",
+  "findingCodes": [
+    "MISSING_CREDIT",
+    "FAILED_REVERSAL"
+  ],
+  "riskLevel": "CRITICAL",
+  "recommendation": "DO NOT RELEASE",
+  "decisionReason": "Critical financial/security control failure detected (MISSING_CREDIT, FAILED_REVERSAL). Release is blocked.",
+  "requiredActions": [
+    "Block the release immediately.",
+    "Audit downstream payment clearing switches and saga orchestrator queues.",
+    "Inspect automated compensating transaction pipelines.",
+    "Review debit and credit posting records.",
+    "Rerun the critical fund-transfer regression suite.",
+    "Obtain authorized human approval before release."
+  ],
+  "humanReviewRequired": true,
+  "simulationIndicator": true
+}
