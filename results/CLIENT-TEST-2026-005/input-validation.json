@@ -1,0 +1,10 @@
+{
+  "requestId": "CLIENT-TEST-2026-005",
+  "requirementId": "REQ-PAY-FT-001",
+  "status": "VALID",
+  "validatedAt": "2026-10-06T10:22:31.798Z",
+  "issues": [],
+  "dataClassification": "SYNTHETIC",
+  "maskedFieldsVerified": true,
+  "secretsRedactedVerified": true
+}
