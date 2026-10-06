@@ -1,0 +1,15 @@
+{
+  "requestId": "CLIENT-TEST-2026-005",
+  "requirementId": "REQ-PAY-FT-001",
+  "executionMode": "SIMULATED",
+  "inputStatus": "VALID",
+  "findingCodes": [],
+  "riskLevel": "LOW",
+  "recommendation": "PASS",
+  "decisionReason": "All double-entry financial invariants and security controls satisfied.",
+  "requiredActions": [
+    "Proceed to final CAB review and release scheduling."
+  ],
+  "humanReviewRequired": true,
+  "simulationIndicator": true
+}
